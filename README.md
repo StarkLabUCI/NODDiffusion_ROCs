@@ -11,6 +11,8 @@ _Neuroimage_, doi: 10.1016/j.neuroimage.2022.119063
 *Contact us at hradhakr@uci.edu with any questions!*
 
 The diffusion processing pipeline is similar to that documented [here.](https://github.com/StarkLabUCI/Woofusion).
+##### Except for the Microstructure Diffusion Toolbox (which can be found [here.](https://github.com/robbert-harms/MDT)), all software used can be accessed by [building](https://sylabs.io/guides/3.0/user-guide/build_a_container.html) the NODDiffusion_sing_recipe singularity recipe provided.
+
 
 Make sure anat and dwi files are in BIDs format before proceeding. (https://github.com/NILAB-UvA/bidsify)
 This script assumes each subject has only a single session. It can be easily modified for longitudinal data.
