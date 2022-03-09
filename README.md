@@ -5,9 +5,8 @@ Higher-order Multi-shell Diffusion Measures Complement Tensor Metrics and Volume
 >
 
 ***Please cite if using any part of this repository:***
-Radhakrishnan, H., Bennett, I.J., Stark, C.E.L (2022). Higher-order Multi-shell Diffusion Measures Complement Tensor Metrics and Volume in Gray Matter When Predicting Age and Cognition 
-
-_Neuroimage_, doi: 10.1016/j.neuroimage.2022.119063
+Radhakrishnan, H., Bennett, I.J., Stark, C.E.L (2022). 
+Higher-order Multi-shell Diffusion Measures Complement Tensor Metrics and Volume in Gray Matter When Predicting Age and Cognition _Neuroimage_, doi: 10.1016/j.neuroimage.2022.119063
 
 *Contact us at hradhakr@uci.edu with any questions!*
 
