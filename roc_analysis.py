@@ -19,17 +19,17 @@ import statsmodels.api as sm
 
 
 def log_reg(origdata, metric_name, method, nperms=100, shuffle=False, plot=True, target='Old?'):    
-    
+    # Get AUC of predicting <target> using just <metric_name>
     target_y=origdata[target]
     predictors=origdata[regions]
     
     predictors = add_constant(predictors)
-    modelfit=sm.Logit(target_y,predictors).fit(disp=False)
+    modelfit=sm.Logit(target_y,predictors).fit(disp=False, method='ncg') #to prevent non_hessian matrix error
     
     modelpred = modelfit.predict(predictors)
     auc=roc_auc_score(target_y, modelpred)
 #     print('AUC = {:.3f}'.format(auc))
-    if plot:
+    if plot: #get ROC curves
         FPR,TPR,thresholds=roc_curve(target_y, modelpred)
         plt.figure()
         plt.plot(FPR,TPR,[0,1],[0,1],color="black")
@@ -41,11 +41,11 @@ def log_reg(origdata, metric_name, method, nperms=100, shuffle=False, plot=True,
         axs.set_aspect('equal')
         plt.title(metric_name)
     prob=np.nan
-    if shuffle:
+    if shuffle: #generate null distribution to get p values.
         iterations=np.zeros(nperms) # Will save AUC
         for i in range(nperms):
             shuffle_y=np.random.permutation(target_y)
-            shufflefit=sm.Logit(shuffle_y,predictors).fit(disp=False, method=method)
+            shufflefit=sm.Logit(shuffle_y,predictors).fit(disp=False, method='ncg') #to prevent non_hessian matrix error
             shufflepred = shufflefit.predict(predictors)
             shuffleauc=roc_auc_score(shuffle_y, shufflepred)
             #print(shuffleauc)
@@ -61,18 +61,18 @@ def log_reg(origdata, metric_name, method, nperms=100, shuffle=False, plot=True,
             plt.title(metric_name)
     return auc,prob
 
-def fake_data(nsubj=100, tcprate=0.3, tcpshift=0.1, thickmean=0, regions=["Left PRC", "Right PRC", "Left ERC", "Right ERC", "Left PHC", "Right PHC", "Left DG-CA3", "Right DG-CA3", "Left CA1", "Right CA1", "Left Subiculum", "Right Subiculum"]):
+def fake_data(target='Old?', nsubj=100, tcprate=0.3, tcpshift=0.1, thickmean=0, regions=["Left PRC", "Right PRC", "Left ERC", "Right ERC", "Left PHC", "Right PHC", "Left DG-CA3", "Right DG-CA3", "Left CA1", "Right CA1", "Left Subiculum", "Right Subiculum"]):
     ntcp=int(nsubj*tcprate)
     tcp=np.zeros(nsubj)
     tcp[0:ntcp]=1
-    df=pd.DataFrame({'Old?':tcp})
+    df=pd.DataFrame({target:tcp})
     for r in regions:
         fakethick=np.random.normal(loc=thickmean,scale=0.7,size=nsubj)
         fakethick[0:ntcp] += np.random.normal(loc=tcpshift,scale=0.2,size=ntcp)
         df[r]=fakethick
     return df
 
-def test_logit():
+def test_logit(target='Old?'):
     shifts=[0.5, 0.2, 0.0]
     rates=[0.3, 0.5]
     for shift in shifts:
@@ -80,7 +80,7 @@ def test_logit():
             fdf=fake_data(tcpshift=shift,tcprate=rate)
             print('\n\n')
             print('--------------------------------------------------------')
-            print('Shift= {} Rate= {}  TCP={}  nonTCP={}'.format(shift,rate,np.sum(fdf['Old?']==1), np.sum(fdf['Old?']==0)))
+            print('Shift= {} Rate= {}  TCP={}  nonTCP={}'.format(shift,rate,np.sum(fdf[target]==1), np.sum(fdf[target]==0)))
             print(fdf.groupby('Old?').mean())
             iterations, mean_accuracy=log_reg(fdf)
             print('  NoShuffle:  Acc={:.3f}  AUC={:.3f}'.format(mean_accuracy[0],mean_accuracy[1]))
