@@ -61,7 +61,7 @@ def log_reg(origdata, metric_name, method, nperms=100, shuffle=False, plot=True,
             plt.title(metric_name)
     return auc,prob
 
-def fake_data(target='Old?', nsubj=100, tcprate=0.3, tcpshift=0.1, thickmean=0, regions=["Left PRC", "Right PRC", "Left ERC", "Right ERC", "Left PHC", "Right PHC", "Left DG-CA3", "Right DG-CA3", "Left CA1", "Right CA1", "Left Subiculum", "Right Subiculum"]):
+def fake_data(regions, target='Old?', nsubj=100, tcprate=0.3, tcpshift=0.1, thickmean=0):
     ntcp=int(nsubj*tcprate)
     tcp=np.zeros(nsubj)
     tcp[0:ntcp]=1
