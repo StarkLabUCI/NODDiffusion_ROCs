@@ -116,3 +116,16 @@ def kdeplot(target,age_mode='all',plot=True,bins=20):
     sns.despine()
     # plt.show()
     # fig.savefig(target+"_"+age_mode+"kdeplot.png", bbox_inches = 'tight')
+
+def get_99th_perc(aucs_filename):
+    df_aucs = pd.read_csv(aucs_filename+".csv").iloc[1: , 1:].dropna()
+    perc = np.percentile(np.array(df_aucs).flatten('C'),99)
+    print(aucs_filename+" 99th percentile = "+str(perc))
+    return perc
+
+def what_perc_is_this(auc, filename,metric):
+    df_aucs = pd.read_csv(filename+".csv").iloc[1: , 1:].dropna()
+    df_aucs = np.array(df_aucs).flatten('C')
+    perc = stats.percentileofscore(df_aucs, auc, kind='strict')
+    print(metric+": "+str(perc))
+    return perc

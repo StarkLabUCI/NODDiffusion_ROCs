@@ -28,14 +28,18 @@ if [ ! -e ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi_dn_ur.mif ]; t
     mrdegibbs ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi_dn.mif ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi_dn_ur.mif #Remove Gibbs Ringing Artifacts
 fi
 
+# Eddy and motion correct:
 if [ ! -e ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dn_ur_edd.mif ]; then
     dwifslpreproc ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi_dn_ur.mif -rpe_all -pe_dir AP ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dn_ur_edd.mif #Perform Eddy current and motion correction
 fi
 
+
+# Bias field correct
 if [ ! -e ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi.mif ]; then
     dwibiascorrect ants ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dn_ur_edd.mif ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi.mif #Bias field correction
 fi
 
+# Make brain mask
 if [ ! -e ${der_path}/mrtrix/masks/sub-${id}/sub-${id}_dwi_mask.mif ]; then
     dwi2mask ${der_path}/mrtrix/preprocessed/sub-${id}/sub-${id}_dwi.mif ${der_path}/mrtrix/masks/sub-${id}/sub-${id}_dwi_mask.mif #Make diffusion mask
 fi
