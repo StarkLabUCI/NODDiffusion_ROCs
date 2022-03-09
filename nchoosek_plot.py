@@ -21,6 +21,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 from statsmodels.tools.tools import add_constant
 import sys
+from roc_analysis import log_reg
 
 def get_data_frame(rawdata,democog_file):
     sga = pd.read_csv(democog_file) #file with cognitive and demographic data
